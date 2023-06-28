@@ -31,8 +31,7 @@ typedef struct KwsModelData {
   SpeechConv *conv_mask_out;
 };
 
-template <typename T>
-KwsModel::KwsModel(const T *model_data) {
+template <typename T> KwsModel::KwsModel(const T *model_data) {
   KwsModelData *data = new KwsModelData();
   if (data == nullptr) {
     printf("KwsModel allocate memory failed.");
@@ -44,14 +43,20 @@ KwsModel::KwsModel(const T *model_data) {
                                   TwoDim(2, 1), true, model_data, offset);
   data->angle_conv = new SpeechConv(4, 10, TwoDim(5, 3), TwoDim(1, 2),
                                     TwoDim(2, 1), true, model_data, offset);
-  data->conv2 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),true, model_data, offset);
-  data->conv3 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),true, model_data, offset);
-  data->conv4 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),true, model_data, offset);
-  data->conv5 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),true, model_data, offset);
-  data->conv6 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),true, model_data, offset);
-  data->conv7 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),true, model_data, offset);
+  data->conv2 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),
+                               true, model_data, offset);
+  data->conv3 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),
+                               true, model_data, offset);
+  data->conv4 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),
+                               true, model_data, offset);
+  data->conv5 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),
+                               true, model_data, offset);
+  data->conv6 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),
+                               true, model_data, offset);
+  data->conv7 = new SpeechConv(20, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1),
+                               true, model_data, offset);
 
-  //TODO: LSTM && DeConv.
+  // TODO: LSTM && DeConv.
 
   self_data = data;
 }

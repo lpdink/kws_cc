@@ -7,17 +7,17 @@ using Eigen::Dynamic;
 using Eigen::Matrix;
 
 class SpeechConv {
- public:
+public:
   template <typename T>
   SpeechConv(int in_channels, int out_channels, const TwoDim &kernel_size,
              const TwoDim &stride, const TwoDim &padding, bool is_bn,
              const T &model_data, int &offset);
   ~SpeechConv();
   template <typename T>
-  Matrix<T, Dynamic, Dynamic> forward(
-      const Matrix<T, Dynamic, Dynamic> &in_feat);
+  Matrix<T, Dynamic, Dynamic>
+  forward(const Matrix<T, Dynamic, Dynamic> &in_feat);
 
- private:
+private:
   void *self_data;
 };
 #endif

@@ -6,14 +6,13 @@ using Eigen::Dynamic;
 using Eigen::Matrix;
 
 class KwsModel {
- public:
-  template <typename T>
-  KwsModel(const T *model_data);
+public:
+  template <typename T> KwsModel(const T *model_data);
   ~KwsModel();
   template <typename T>
   Matrix<T, Dynamic, Dynamic> forward(const Matrix<T, Dynamic, Dynamic> &input);
 
- private:
+private:
   void *self_data;
 };
 #endif
