@@ -1,5 +1,7 @@
-#include "utils.h"
 #include <stdio.h>
+
+#include "utils.hpp"
+using namespace KwsBackend;
 
 int main(int argc, const char *argv[]) {
   if (argc < 2) {

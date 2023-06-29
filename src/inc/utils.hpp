@@ -1,6 +1,7 @@
-#ifndef _KWS_UTILS_H_
-#define _KWS_UTILS_H_
+#ifndef _KWS_UTILS_HPP_
+#define _KWS_UTILS_HPP_
 
+namespace KwsBackend {
 float *load_file(const char *file_path);
 
 typedef struct TwoDim {
@@ -8,5 +9,5 @@ typedef struct TwoDim {
   int first;
   int second;
 };
-
+}  // namespace KwsBackend
 #endif

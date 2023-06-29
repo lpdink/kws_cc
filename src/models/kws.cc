@@ -31,7 +31,8 @@ typedef struct KwsModelData {
   SpeechConv *conv_mask_out;
 };
 
-template <typename T> KwsModel::KwsModel(const T *model_data) {
+template <typename T>
+KwsModel::KwsModel(const T *model_data) {
   KwsModelData *data = new KwsModelData();
   if (data == nullptr) {
     printf("KwsModel allocate memory failed.");

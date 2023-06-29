@@ -4,3 +4,4 @@ resources/
 *.log
 *.out
 .vscode/
+test/
