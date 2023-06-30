@@ -1,6 +1,8 @@
 # KWS_CXX
 
-## 路线
+## Usage:
 
-1. 自顶向下的：读取模型，读取输入。使用offset传递模型
-2. 
+1. python tools/dump_pkl.py YOUR_PKL_PATH
+2. sh build.sh
+3. ./build/crn_test ./resources/weight.bin ./resources/weight.bin 
+4. 这将读取权重，打印的offset应当恰为模型文件的4倍

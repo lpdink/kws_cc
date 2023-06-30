@@ -8,8 +8,9 @@
 
 namespace KwsBackend {
 template <typename T>
-T *load_file(const char *file_path) {
-  int ret = -1, size = 0;
+T *load_file(const char *file_path, int &size) {
+  int ret = -1;
+  size = 0;
   struct stat st;
   T *rst = nullptr;
   ret = stat(file_path, &st);
