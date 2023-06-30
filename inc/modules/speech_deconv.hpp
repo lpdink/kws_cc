@@ -1,8 +1,8 @@
 #ifndef _SPEECH_DECONV_HPP_
 #define _SPEECH_DECONV_HPP_
 #include "Eigen/Dense"
-#include "utils.hpp"
 #include "ops/conv2d_t.hpp"
+#include "utils.hpp"
 
 using Eigen::Dynamic;
 using Eigen::Matrix;
@@ -13,12 +13,12 @@ struct SpeechDeConvData {
   ConvTranspose2D<T> *ln;
   ConvTranspose2D<T> *gate;
   SpeechDeConvData(const int in_channels, const int out_channels,
-                 const TwoDim kernel_size, const TwoDim stride,
-                 const TwoDim padding, T *model_data, int &offset) {
+                   const TwoDim kernel_size, const TwoDim stride,
+                   const TwoDim padding, T *model_data, int &offset) {
     ln = new ConvTranspose2D<T>(in_channels, out_channels, kernel_size, stride,
-                       padding, model_data, offset);
-    gate = new ConvTranspose2D<T>(in_channels, out_channels, kernel_size, stride,
-                         padding, model_data, offset);
+                                padding, model_data, offset);
+    gate = new ConvTranspose2D<T>(in_channels, out_channels, kernel_size,
+                                  stride, padding, model_data, offset);
   }
   ~SpeechDeConvData() {
     delete this->ln;
@@ -31,8 +31,8 @@ template <typename T>
 class SpeechDeConv {
  public:
   SpeechDeConv(int in_channels, int out_channels, const TwoDim kernel_size,
-             const TwoDim stride, const TwoDim padding, T *model_data,
-             int &offset);
+               const TwoDim stride, const TwoDim padding, T *model_data,
+               int &offset);
   ~SpeechDeConv();
   Matrix<T, Dynamic, Dynamic> forward(
       const Matrix<T, Dynamic, Dynamic> &in_feat);
@@ -43,12 +43,12 @@ class SpeechDeConv {
 
 template <typename T>
 SpeechDeConv<T>::SpeechDeConv(int in_channels, int out_channels,
-                          const TwoDim kernel_size, const TwoDim stride,
-                          const TwoDim padding, T *model_data,
-                          int &offset) {
+                              const TwoDim kernel_size, const TwoDim stride,
+                              const TwoDim padding, T *model_data,
+                              int &offset) {
   this->self_data =
       new SpeechDeConvData<T>(in_channels, out_channels, kernel_size, stride,
-                            padding, model_data, offset);
+                              padding, model_data, offset);
 }
 
 template <typename T>

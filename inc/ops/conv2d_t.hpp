@@ -4,18 +4,18 @@
 #include "utils.hpp"
 
 using Eigen::Dynamic;
-using Eigen::Matrix;
 using Eigen::Map;
+using Eigen::Matrix;
 
 namespace KwsBackend {
 
-//template <typename T>
-//class ConvTranspose2D {
+// template <typename T>
+// class ConvTranspose2D {
 
 template <typename T>
 struct ConvTranspose2DData {
-  ConvTranspose2DData(int input_channels, int output_channels, TwoDim kernel_size,
-             T *model_data, int &offset) {
+  ConvTranspose2DData(int input_channels, int output_channels,
+                      TwoDim kernel_size, T *model_data, int &offset) {
     this->w_ = new Map<Matrix<T, Dynamic, Dynamic>>(
         model_data + offset, input_channels,
         output_channels * kernel_size.first * kernel_size.second);
@@ -43,8 +43,8 @@ class ConvTranspose2D {
  public:
   ConvTranspose2D(const KwsBackend::ConvTranspose2D<float> &) = delete;
   ConvTranspose2D(const int input_channels, const int output_channels,
-         const TwoDim kernel_size, const TwoDim stride, const TwoDim padding,
-         T *model_data, int &offset);
+                  const TwoDim kernel_size, const TwoDim stride,
+                  const TwoDim padding, T *model_data, int &offset);
 
   ~ConvTranspose2D();
 
@@ -61,16 +61,18 @@ class ConvTranspose2D {
 };
 
 template <typename T>
-ConvTranspose2D<T>::ConvTranspose2D(const int input_channels, const int output_channels,
-                  const TwoDim kernel_size, const TwoDim padding,
-                  const TwoDim stride, T *model_data, int &offset)
+ConvTranspose2D<T>::ConvTranspose2D(const int input_channels,
+                                    const int output_channels,
+                                    const TwoDim kernel_size,
+                                    const TwoDim padding, const TwoDim stride,
+                                    T *model_data, int &offset)
     : input_channels_(input_channels),
       output_channels_(output_channels),
       kernel_size_(kernel_size),
       padding_(padding),
       stride_(stride) {
   this->self_data = new ConvTranspose2DData<T>(input_channels, output_channels,
-                                      kernel_size, model_data, offset);
+                                               kernel_size, model_data, offset);
 }
 
 template <typename T>

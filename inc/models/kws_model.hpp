@@ -54,24 +54,24 @@ struct KwsModelData {
 
     this->lstm1 = new LSTM<T>(60, 60, model_data, offset);
     this->lstm2 = new LSTM<T>(60, 60, model_data, offset);
-    this->conv7_t =
-        new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv6_t =
-        new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv5_t =
-        new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv4_t =
-        new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv3_t =
-        new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv2_t =
-        new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv1_t =
-        new SpeechDeConv<T>(40, 16, TwoDim(1, 3), TwoDim(1, 2), TwoDim(0, 1), model_data, offset);
-    this->conv_mag_out =
-        new SpeechConv<T>(20, 4, TwoDim(1, 3), TwoDim(1, 1), TwoDim(0, 1), model_data, offset);
-    this->conv_mask_out =
-        new SpeechConv<T>(20, 12, TwoDim(1, 3), TwoDim(1, 1), TwoDim(0, 1), model_data, offset);
+    this->conv7_t = new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv6_t = new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv5_t = new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv4_t = new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv3_t = new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv2_t = new SpeechDeConv<T>(40, 20, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv1_t = new SpeechDeConv<T>(40, 16, TwoDim(1, 3), TwoDim(1, 2),
+                                        TwoDim(0, 1), model_data, offset);
+    this->conv_mag_out = new SpeechConv<T>(20, 4, TwoDim(1, 3), TwoDim(1, 1),
+                                           TwoDim(0, 1), model_data, offset);
+    this->conv_mask_out = new SpeechConv<T>(20, 12, TwoDim(1, 3), TwoDim(1, 1),
+                                            TwoDim(0, 1), model_data, offset);
   }
   ~KwsModelData() {
     delete this->mag_conv;
@@ -149,9 +149,9 @@ KwsModel<T>::~KwsModel() {
 template <typename T>
 Matrix<T, Dynamic, Dynamic> KwsModel<T>::forward(
     const Matrix<T, Dynamic, Dynamic> &input) {
-    printf("\nModel Forward Not Implemented\n");
-    Matrix<T, Dynamic, Dynamic> tmp=Matrix<T, Dynamic, Dynamic>(0,0);
-    return tmp;
+  printf("\nModel Forward Not Implemented\n");
+  Matrix<T, Dynamic, Dynamic> tmp = Matrix<T, Dynamic, Dynamic>(0, 0);
+  return tmp;
 }
 }  // namespace KwsBackend
 #endif

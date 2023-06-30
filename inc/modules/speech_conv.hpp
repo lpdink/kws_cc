@@ -15,8 +15,8 @@ struct SpeechConvData {
   SpeechConvData(const int in_channels, const int out_channels,
                  const TwoDim kernel_size, const TwoDim stride,
                  const TwoDim padding, T *model_data, int &offset) {
-    ln = new Conv2D<T>(in_channels, out_channels, kernel_size, stride,
-                       padding, model_data, offset);
+    ln = new Conv2D<T>(in_channels, out_channels, kernel_size, stride, padding,
+                       model_data, offset);
     gate = new Conv2D<T>(in_channels, out_channels, kernel_size, stride,
                          padding, model_data, offset);
   }
@@ -44,8 +44,7 @@ class SpeechConv {
 template <typename T>
 SpeechConv<T>::SpeechConv(int in_channels, int out_channels,
                           const TwoDim kernel_size, const TwoDim stride,
-                          const TwoDim padding, T *model_data,
-                          int &offset) {
+                          const TwoDim padding, T *model_data, int &offset) {
   this->self_data =
       new SpeechConvData<T>(in_channels, out_channels, kernel_size, stride,
                             padding, model_data, offset);

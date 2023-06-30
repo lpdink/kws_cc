@@ -1,1 +1,1 @@
-find . -type f \( -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) -not -path "./third_party/*" -not -path "./src/inc/Eigen/*" | xargs clang-format -i --style=Google
+find . -type f \( -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) -not -path "./third_party/*" -not -path "./inc/Eigen/*" | xargs clang-format -i --style=Google
