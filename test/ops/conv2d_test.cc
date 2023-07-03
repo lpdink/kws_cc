@@ -2,7 +2,7 @@
 
 #include "utils.hpp"
 using namespace Eigen;
-using namespace KwsBackend;
+using namespace SpeechBackend;
 using namespace std;
 
 int main() {

@@ -6,7 +6,8 @@ using Eigen::Dynamic;
 using Eigen::Map;
 using Eigen::Matrix;
 
-namespace KwsBackend {
+namespace SpeechBackend {
+namespace Ops {
 
 template <typename T>
 struct LSTMData {
@@ -75,5 +76,6 @@ template <typename T>
 Eigen::Matrix<T, Eigen::Dynamic, 1> LSTM<T>::forward(
     const Eigen::Matrix<T, Eigen::Dynamic, 1> &input,
     const Eigen::Matrix<T, Eigen::Dynamic, 1> &hidden) {}
-}  // namespace KwsBackend
+}  // namespace Ops
+}  // namespace SpeechBackend
 #endif

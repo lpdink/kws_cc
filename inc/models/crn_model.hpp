@@ -1,5 +1,5 @@
-#ifndef _KWS_MODEL_HPP_
-#define _KWS_MODEL_HPP_
+#ifndef _CRN_MODEL_HPP_
+#define _CRN_MODEL_HPP_
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,10 +10,16 @@
 
 using Eigen::Dynamic;
 using Eigen::Matrix;
-namespace KwsBackend {
+using SpeechBackend::Module::SpeechConv;
+using SpeechBackend::Module::SpeechDeConv;
+using SpeechBackend::Ops::LSTM;
+
+namespace SpeechBackend {
+namespace Model {
+namespace Crn {
 
 template <typename T>
-struct KwsModelData {
+struct CrnModelData {
   /* data */
   SpeechConv<T> *mag_conv;
   SpeechConv<T> *angle_conv;
@@ -34,7 +40,7 @@ struct KwsModelData {
   SpeechDeConv<T> *conv7_t;
   SpeechConv<T> *conv_mag_out;
   SpeechConv<T> *conv_mask_out;
-  KwsModelData(T *model_data, int &offset) {
+  CrnModelData(T *model_data, int &offset) {
     this->mag_conv = new SpeechConv<T>(4, 10, TwoDim(5, 3), TwoDim(1, 2),
                                        TwoDim(2, 1), model_data, offset);
     this->angle_conv = new SpeechConv<T>(4, 10, TwoDim(5, 3), TwoDim(1, 2),
@@ -73,7 +79,7 @@ struct KwsModelData {
     this->conv_mask_out = new SpeechConv<T>(20, 12, TwoDim(1, 3), TwoDim(1, 1),
                                             TwoDim(0, 1), model_data, offset);
   }
-  ~KwsModelData() {
+  ~CrnModelData() {
     delete this->mag_conv;
     this->mag_conv = nullptr;
     delete this->angle_conv;
@@ -116,23 +122,23 @@ struct KwsModelData {
 };
 
 template <typename T>
-class KwsModel {
+class CrnModel {
  public:
-  KwsModel(T *model_data);
-  ~KwsModel();
+  CrnModel(T *model_data);
+  ~CrnModel();
   Matrix<T, Dynamic, Dynamic> forward(const Matrix<T, Dynamic, Dynamic> &input);
 
  private:
-  KwsModelData<T> *self_data;
+  CrnModelData<T> *self_data;
 };
 
 template <typename T>
-KwsModel<T>::KwsModel(T *model_data) {
+CrnModel<T>::CrnModel(T *model_data) {
   int offset = 0;
-  KwsModelData<T> *data = new KwsModelData<T>(model_data, offset);
-  memset(data, 0, sizeof(KwsModelData<T>));
+  CrnModelData<T> *data = new CrnModelData<T>(model_data, offset);
+  memset(data, 0, sizeof(CrnModelData<T>));
   if (data == nullptr) {
-    printf("KwsModel allocate memory failed.");
+    printf("CrnModel allocate memory failed.");
     exit(0);
   }
 
@@ -141,17 +147,19 @@ KwsModel<T>::KwsModel(T *model_data) {
 }
 
 template <typename T>
-KwsModel<T>::~KwsModel() {
+CrnModel<T>::~CrnModel() {
   delete this->self_data;
   this->self_data = nullptr;
 }
 
 template <typename T>
-Matrix<T, Dynamic, Dynamic> KwsModel<T>::forward(
+Matrix<T, Dynamic, Dynamic> CrnModel<T>::forward(
     const Matrix<T, Dynamic, Dynamic> &input) {
   printf("\nModel Forward Not Implemented\n");
   Matrix<T, Dynamic, Dynamic> tmp = Matrix<T, Dynamic, Dynamic>(0, 0);
   return tmp;
 }
-}  // namespace KwsBackend
+}  // namespace Crn
+}  // namespace Model
+}  // namespace SpeechBackend
 #endif

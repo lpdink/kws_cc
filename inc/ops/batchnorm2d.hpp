@@ -5,7 +5,8 @@
 using Eigen::Dynamic;
 using Eigen::Matrix;
 
-namespace KwsBackend {
+namespace SpeechBackend {
+namespace Ops {
 template <typename T>
 class BatchNorm2D {
  public:
@@ -58,5 +59,6 @@ class BatchNorm2D {
 
 template <typename T>
 BatchNorm2D<T>::BatchNorm2D(int num_features) : num_features_(num_features) {}
-}  // namespace KwsBackend
+}  // namespace Ops
+}  // namespace SpeechBackend
 #endif

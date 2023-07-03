@@ -1,12 +1,12 @@
-#ifndef _KWS_UTILS_HPP_
-#define _KWS_UTILS_HPP_
+#ifndef _CRN_UTILS_HPP_
+#define _CRN_UTILS_HPP_
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace KwsBackend {
+namespace SpeechBackend {
 template <typename T>
 T *load_file(const char *file_path, int &size) {
   int ret = -1;
@@ -32,5 +32,5 @@ struct TwoDim {
   int first;
   int second;
 };
-}  // namespace KwsBackend
+}  // namespace SpeechBackend
 #endif

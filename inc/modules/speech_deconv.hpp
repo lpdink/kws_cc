@@ -6,7 +6,10 @@
 
 using Eigen::Dynamic;
 using Eigen::Matrix;
-namespace KwsBackend {
+using SpeechBackend::Ops::ConvTranspose2D;
+
+namespace SpeechBackend {
+namespace Module {
 
 template <typename T>
 struct SpeechDeConvData {
@@ -60,5 +63,6 @@ SpeechDeConv<T>::~SpeechDeConv() {
 template <typename T>
 Matrix<T, Dynamic, Dynamic> SpeechDeConv<T>::forward(
     const Matrix<T, Dynamic, Dynamic> &in_feat) {}
-}  // namespace KwsBackend
+}  // namespace Module
+}  // namespace SpeechBackend
 #endif

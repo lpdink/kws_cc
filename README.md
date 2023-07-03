@@ -1,4 +1,4 @@
-# KWS_CXX
+# SpeechBackend
 
 ## Usage:
 

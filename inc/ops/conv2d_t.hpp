@@ -7,7 +7,8 @@ using Eigen::Dynamic;
 using Eigen::Map;
 using Eigen::Matrix;
 
-namespace KwsBackend {
+namespace SpeechBackend {
+namespace Ops {
 
 // template <typename T>
 // class ConvTranspose2D {
@@ -41,7 +42,7 @@ struct ConvTranspose2DData {
 template <typename T>
 class ConvTranspose2D {
  public:
-  ConvTranspose2D(const KwsBackend::ConvTranspose2D<float> &) = delete;
+  ConvTranspose2D(const ConvTranspose2D<float> &) = delete;
   ConvTranspose2D(const int input_channels, const int output_channels,
                   const TwoDim kernel_size, const TwoDim stride,
                   const TwoDim padding, T *model_data, int &offset);
@@ -84,6 +85,7 @@ ConvTranspose2D<T>::~ConvTranspose2D() {
   delete this->self_data;
   this->self_data = nullptr;
 }
-}  // namespace KwsBackend
+}  // namespace Ops
+}  // namespace SpeechBackend
 
 #endif
