@@ -44,8 +44,8 @@ class ConvTranspose2D {
  public:
   ConvTranspose2D(const ConvTranspose2D<float> &) = delete;
   ConvTranspose2D(const int input_channels, const int output_channels,
-                  const TwoDim kernel_size, const TwoDim stride,
-                  const TwoDim padding, T *model_data, int &offset);
+                  const TwoDim &&kernel_size, const TwoDim &&stride,
+                  const TwoDim &&padding, T *model_data, int &offset);
 
   ~ConvTranspose2D();
 
@@ -64,9 +64,10 @@ class ConvTranspose2D {
 template <typename T>
 ConvTranspose2D<T>::ConvTranspose2D(const int input_channels,
                                     const int output_channels,
-                                    const TwoDim kernel_size,
-                                    const TwoDim padding, const TwoDim stride,
-                                    T *model_data, int &offset)
+                                    const TwoDim &&kernel_size,
+                                    const TwoDim &&padding,
+                                    const TwoDim &&stride, T *model_data,
+                                    int &offset)
     : input_channels_(input_channels),
       output_channels_(output_channels),
       kernel_size_(kernel_size),

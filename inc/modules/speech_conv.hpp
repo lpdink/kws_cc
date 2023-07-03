@@ -15,12 +15,14 @@ struct SpeechConvData {
   Conv2D<T> *ln;
   Conv2D<T> *gate;
   SpeechConvData(const int in_channels, const int out_channels,
-                 const TwoDim kernel_size, const TwoDim stride,
-                 const TwoDim padding, T *model_data, int &offset) {
-    ln = new Conv2D<T>(in_channels, out_channels, kernel_size, stride, padding,
-                       model_data, offset);
-    gate = new Conv2D<T>(in_channels, out_channels, kernel_size, stride,
-                         padding, model_data, offset);
+                 const TwoDim &&kernel_size, const TwoDim &&stride,
+                 const TwoDim &&padding, T *model_data, int &offset) {
+    ln = new Conv2D<T>(in_channels, out_channels, std::move(kernel_size),
+                       std::move(stride), std::move(padding), model_data,
+                       offset);
+    gate = new Conv2D<T>(in_channels, out_channels, std::move(kernel_size),
+                         std::move(stride), std::move(padding), model_data,
+                         offset);
   }
   ~SpeechConvData() {
     delete this->ln;
@@ -32,8 +34,8 @@ struct SpeechConvData {
 template <typename T>
 class SpeechConv {
  public:
-  SpeechConv(int in_channels, int out_channels, const TwoDim kernel_size,
-             const TwoDim stride, const TwoDim padding, T *model_data,
+  SpeechConv(int in_channels, int out_channels, const TwoDim &&kernel_size,
+             const TwoDim &&stride, const TwoDim &&padding, T *model_data,
              int &offset);
   ~SpeechConv();
   Matrix<T, Dynamic, Dynamic> forward(
@@ -45,11 +47,11 @@ class SpeechConv {
 
 template <typename T>
 SpeechConv<T>::SpeechConv(int in_channels, int out_channels,
-                          const TwoDim kernel_size, const TwoDim stride,
-                          const TwoDim padding, T *model_data, int &offset) {
-  this->self_data =
-      new SpeechConvData<T>(in_channels, out_channels, kernel_size, stride,
-                            padding, model_data, offset);
+                          const TwoDim &&kernel_size, const TwoDim &&stride,
+                          const TwoDim &&padding, T *model_data, int &offset) {
+  this->self_data = new SpeechConvData<T>(
+      in_channels, out_channels, std::move(kernel_size), std::move(stride),
+      std::move(padding), model_data, offset);
 }
 
 template <typename T>
