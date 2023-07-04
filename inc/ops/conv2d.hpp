@@ -1,5 +1,7 @@
 #ifndef _CONV2D_HPP_
 #define _CONV2D_HPP_
+#include <iostream>
+
 #include "Eigen/Dense"
 #include "unsupported/Eigen/CXX11/Tensor"
 #include "utils.hpp"
@@ -15,14 +17,14 @@ template <typename T>
 struct Conv2dData {
   Conv2dData(int input_channels, int output_channels, TwoDim kernel_size,
              T *model_data, int &offset) {
-    this->w_ = new TensorMap<Tensor<T, 4>>(model_data + offset, output_channels,
-                                           input_channels, kernel_size.first,
-                                           kernel_size.second);
+    this->w_ = new TensorMap<Tensor<T, 4, 1>>(
+        model_data + offset, output_channels, input_channels, kernel_size.first,
+        kernel_size.second);
     offset += output_channels * input_channels * kernel_size.first *
               kernel_size.second;
 
     this->b_ =
-        new TensorMap<Tensor<T, 1>>(model_data + offset, output_channels);
+        new TensorMap<Tensor<T, 1, 1>>(model_data + offset, output_channels);
     offset += output_channels;
   }
   ~Conv2dData() {
@@ -31,9 +33,9 @@ struct Conv2dData {
     this->w_ = nullptr;
     this->b_ = nullptr;
   }
-  TensorMap<Tensor<T, 4>> *w_;  // weight: [out_channel, in_channel,
-                                // kernel_size.first, kernel_size.second]
-  TensorMap<Tensor<T, 1>> *b_;  // bias:[out_channel]
+  TensorMap<Tensor<T, 4, 1>> *w_;  // weight: [out_channel, in_channel,
+                                   // kernel_size.first, kernel_size.second]
+  TensorMap<Tensor<T, 1, 1>> *b_;  // bias:[out_channel]
 };
 
 template <typename T>
@@ -45,8 +47,8 @@ class Conv2D {
          const TwoDim &&padding, T *model_data, int &offset);
 
   ~Conv2D();
-  // input:[batch_size, channel, width, height]
-  Tensor<T, 4> forward(const Tensor<T, 4> &input);
+  // input:[batch_size, channel, height, width]
+  Tensor<T, 4, 1> forward(const Tensor<T, 4, 1> &input);
 
  private:
   int input_channels_;   // 输入通道数
@@ -72,10 +74,10 @@ Conv2D<T>::Conv2D(const int input_channels, const int output_channels,
 }
 
 template <typename T>
-static Tensor<T, 2> im2col(const Tensor<T, 4> &input, int kernel_height,
-                           int kernel_width, int padding_height,
-                           int padding_width, int stride_height,
-                           int stride_width) {
+static Tensor<T, 2, 1> im2col(const Tensor<T, 4, 1> &input, int kernel_height,
+                              int kernel_width, int padding_height,
+                              int padding_width, int stride_height,
+                              int stride_width) {
   int batch_size = input.dimension(0);
   int input_channels = input.dimension(1);
   int input_height = input.dimension(2);
@@ -87,7 +89,7 @@ static Tensor<T, 2> im2col(const Tensor<T, 4> &input, int kernel_height,
   int col_height = kernel_height * kernel_width * input_channels;
   int col_width = output_height * output_width;
 
-  Tensor<T, 2> col(col_height, col_width);
+  Tensor<T, 2, 1> col(col_height, col_width);
 
   for (int c = 0; c < col_height; ++c) {
     int channel = c % input_channels;
@@ -114,7 +116,7 @@ static Tensor<T, 2> im2col(const Tensor<T, 4> &input, int kernel_height,
 }
 
 template <typename T>
-Tensor<T, 4> Conv2D<T>::forward(const Tensor<T, 4> &input) {
+Tensor<T, 4, 1> Conv2D<T>::forward(const Tensor<T, 4, 1> &input) {
   int batch_size = input.dimension(0);
   int input_height = input.dimension(2);
   int input_width = input.dimension(3);
@@ -126,27 +128,26 @@ Tensor<T, 4> Conv2D<T>::forward(const Tensor<T, 4> &input) {
                      1;
 
   // Reshape the input tensor using im2col
-  Tensor<T, 2> input_col =
+  // 60, 8192
+  Tensor<T, 2, 1> input_col =
       im2col(input, kernel_size_.first, kernel_size_.second, padding_.first,
              padding_.second, stride_.first, stride_.second);
 
   // Reshape the weight tensor into a matrix
-  Tensor<T, 2> weight_col = self_data->w_->reshape(Eigen::array<T, 2>(
-      {output_channels_,
+  Tensor<T, 2, 1> weight_col = self_data->w_->reshape(Eigen::array<T, 2>(
+      {this->output_channels_,
        input_channels_ * kernel_size_.first * kernel_size_.second}));
-  //   Tensor<T, 4> weight_reshaped = self_data->w_->reshape({output_channels_,
-  //   input_channels_, kernel_size_.first, kernel_size_.second});
-
+  std::cout << weight_col << std::endl;
+  std::cout << "---------" << std::endl;
+  std::cout << input_col << std::endl;
   // Perform the matrix multiplication
-  Tensor<T, 2> output_col = weight_col.contract(
+  Tensor<T, 2, 1> output_col = weight_col.contract(
       input_col,
       Eigen::array<Eigen::IndexPair<int>, 1>{{Eigen::IndexPair<int>(1, 0)}});
-  //   m1.contract(m2, Eigen::array<Eigen::IndexPair<int>,
-  //   1>{{Eigen::IndexPair<int>(1, 0)}});
 
   // Reshape the output matrix back into a tensor
-  Tensor<T, 4> output(batch_size, output_channels_, output_height,
-                      output_width);
+  Tensor<T, 4, 1> output(batch_size, output_channels_, output_height,
+                         output_width);
   for (int i = 0; i < batch_size; ++i) {
     for (int j = 0; j < output_channels_; ++j) {
       for (int k = 0; k < output_height; ++k) {
