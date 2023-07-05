@@ -36,11 +36,12 @@ def main():
             input = torch.randn((1, 4, 10, 10))
             py_rst = py_conv2d(input)
             print(f"py_shape:{py_rst.shape}")
-            print("weight",py_conv2d.weight)
-            print("input", input)
+            # print("weight",py_conv2d.weight)
+            print("input_py", input)
+            bias = torch.zeros_like(py_conv2d.bias, dtype=torch.float32)
             with open(f"{ROOT}/tensor.bin", "wb") as tensor_file:
                 weight = memoryview(py_conv2d.weight.reshape(-1).numpy())
-                bias = memoryview(py_conv2d.bias.reshape(-1).numpy())
+                bias = memoryview(bias.reshape(-1).numpy())
                 tensor_file.write(weight)
                 tensor_file.write(bias)
             with open(f"{ROOT}/input.bin", "wb") as input_file:

@@ -17,7 +17,7 @@ int main() {
   int offset = 0;
   auto *layer = new Conv2D<float>(4, 10, TwoDim(5, 3), TwoDim(1, 2),
                                   TwoDim(2, 1), model_data, offset);
-  cout << offset << endl;
+  //   cout << offset << endl;
   auto *input = new TensorMap<Tensor<float, 4, 1>>(input_data, 1, 4, 10, 10);
   auto rst = layer->forward(*input);
   int rst_batch_size = rst.dimension(0);
