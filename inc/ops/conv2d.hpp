@@ -73,151 +73,6 @@ Conv2D<T>::Conv2D(const int input_channels, const int output_channels,
                                       kernel_size, model_data, offset);
 }
 
-// template <typename T>
-// Tensor<T, 2, 1> im2col(const Tensor<T, 4, 1> &input, int kernel_height,
-//                               int kernel_width, int padding_height,
-//                               int padding_width, int stride_height,
-//                               int stride_width) {
-//   int batch_size = input.dimension(0); // assert batch_size==1
-//   int input_channels = input.dimension(1);
-//   int input_height = input.dimension(2);
-//   int input_width = input.dimension(3);
-//   int output_height =
-//       (input_height - kernel_height + 2 * padding_height) / stride_height +
-//       1;
-//   int output_width =
-//       (input_width - kernel_width + 2 * padding_width) / stride_width + 1;
-//   int col_height = kernel_height * kernel_width * input_channels; // 60
-//   int col_width = output_height * output_width;
-
-//   Tensor<T, 2, 1> col(col_height, col_width); // 60*xx
-
-// //   for(int rdx = 0;rdx<col_height;rdx++){
-// //     for(int cdx = 0;cdx<col_width;cdx++){
-// //         col(rdx, cdx) = input(0, )
-// //     }
-// //   }
-
-//   for (int c = 0; c < col_height; ++c) { // 60
-//     int channel = c % input_channels;
-//     int kernel_row = (c / input_channels) / kernel_width;
-//     int kernel_col = (c / input_channels) % kernel_width;
-
-//     for (int h = 0; h < output_height; ++h) {
-//       for (int w = 0; w < output_width; ++w) {
-//         int input_row = h * stride_height - padding_height + kernel_row;
-//         int input_col = w * stride_width - padding_width + kernel_col;
-
-//         if (input_row >= 0 && input_row < input_height && input_col >= 0 &&
-//             input_col < input_width) {
-//           col(c, h * output_width + w) =
-//               input(0, channel, input_row, input_col);
-//         } else {
-//           col(c, h * output_width + w) = 0;
-//         }
-//       }
-//     }
-//   }
-
-//   return col;
-// }
-
-//  第二版，参考纯C实现
-// template <typename T>
-// static Tensor<T, 2, 1> im2col(const Tensor<T, 4, 1> &input,
-//                               TwoDim &&kernel_size, TwoDim &&stride,
-//                               TwoDim &&padding) {
-//   int batch_size = input.dimension(0);
-//   int in_channel = input.dimension(3);
-//   int in_height = input.dimension(1);
-//   int in_width = input.dimension(2);
-
-//   // conv_out_height
-//   int win_h =
-//       (in_height + 2 * padding.first - kernel_size.first) / stride.first + 1;
-//   // conv_out_width
-//   int win_w =
-//       (in_width + 2 * padding.second - kernel_size.second) / stride.second +
-//       1;
-
-//   // 一定范围内卷积核的权重压成一个col_h
-//   int col_h = kernel_size.first * kernel_size.second * in_channel;
-//   int col_w = win_h * win_w;
-//   int x, y;
-
-//   // weight shape==[kernel_nums, col_h]
-//   Tensor<T, 2, 1> rst(col_h, col_w);
-//   rst.setZero();
-
-//   for (int i = 0; i < col_h; i++) {
-//     x = i % win_w;
-//     y = i / win_w;
-//     for (int j = 0; j < col_w; j++) {
-//       int c = j / (kernel_size.second * kernel_size.first);
-//       int kj = j % kernel_size.second;
-//       int ki = j / kernel_size.second;
-
-//       int row = y * stride.first + ki - padding.first;
-//       int col = x * stride.second + kj - padding.second;
-
-//       row = row - padding.first;
-//       col = col - padding.second;
-//       if (row < 0 || row >= in_height || col < 0 || col >= in_width) {
-//         rst(i, j) = 0;
-//       } else {
-//         rst(i, j) =
-//             *(input.data() + c * in_width * in_height + row * in_width +
-//             col);
-//       }
-//     }
-//   }
-//   return rst;
-// }
-
-/*第三版 caffe实现*/
-// template <typename T>
-// Tensor<T, 2, 1> im2col(const Tensor<T, 4, 1>& input, TwoDim&& kernel_size,
-//                        TwoDim&& stride, TwoDim&& padding) {
-//   int batch_size = input.dimension(0);
-//   int channels = input.dimension(1);
-//   int height = input.dimension(2);
-//   int width = input.dimension(3);
-//   const int output_h = (height + 2 * padding.first - kernel_size.first ) /
-//   stride.first+1; const int output_w = (width + 2 * padding.second -
-//   kernel_size.second ) / stride.second+1; const int channel_size = height *
-//   width; auto *data_im = input.data(); int col_h = kernel_size.first *
-//   kernel_size.second * channels; int col_w = output_h * output_w; Tensor<T,
-//   2, 1> rst(col_h, col_w); rst.setZero(); auto *data_col = rst.data(); for
-//   (int channel = channels; channel--; data_im += channel_size) {
-//     for (int kernel_row = 0; kernel_row < kernel_size.first; kernel_row++) {
-//       for (int kernel_col = 0; kernel_col < kernel_size.second; kernel_col++)
-//       {
-//         int input_row = -padding.first + kernel_row;
-//         for (int output_rows = output_h; output_rows; output_rows--) {
-//           if (!(input_row<height)) {
-//             for (int output_cols = output_w; output_cols; output_cols--) {
-//               *(data_col++) = 0;
-//             }
-//           } else {
-//             int input_col = -padding.second + kernel_col;
-//             for (int output_col = output_w; output_col; output_col--) {
-//               if (input_col<width) {
-//                 *(data_col++) = data_im[input_row * width + input_col];
-//               } else {
-//                 *(data_col++) = 0;
-//               }
-//               input_col += stride.second;
-//             }
-//           }
-//           input_row += stride.first;
-//         }
-//       }
-//     }
-//   }
-//   return rst;
-// }
-
-// 第四版：自己实现
 template <typename T>
 static Tensor<T, 2, 1> im2col(const Tensor<T, 4, 1> &input,
                               TwoDim &&kernel_size, TwoDim &&stride,
@@ -274,22 +129,13 @@ Tensor<T, 4, 1> Conv2D<T>::forward(const Tensor<T, 4, 1> &input) {
                      1;
 
   // Reshape the input tensor using im2col
-  // 60, 8192
   Tensor<T, 2, 1> input_col = im2col(input, std::move(kernel_size_),
                                      std::move(stride_), std::move(padding_));
   // Reshape the weight tensor into a matrix
   Tensor<T, 2, 1> weight_col = self_data->w_->reshape(Eigen::array<T, 2>(
       {this->output_channels_,
        input_channels_ * kernel_size_.first * kernel_size_.second}));
-  //   std::cout << "input_cc:" << std::endl << input << std::endl;
-  //   std::cout << "weight_col:" << std::endl << weight_col << std::endl;
-  //   std::cout << "---------" << std::endl;
-  //   std::cout << "input_col:" << std::endl << input_col << std::endl;
   // Perform the matrix multiplication
-  std::cout << "weight shape:" << weight_col.dimension(0) << "  "
-            << weight_col.dimension(1) << std::endl;
-  std::cout << "col shape:" << input_col.dimension(0) << " "
-            << input_col.dimension(1) << std::endl;
   Tensor<T, 2, 1> output_col = weight_col.contract(
       input_col,
       Eigen::array<Eigen::IndexPair<int>, 1>{{Eigen::IndexPair<int>(1, 0)}});
@@ -303,7 +149,7 @@ Tensor<T, 4, 1> Conv2D<T>::forward(const Tensor<T, 4, 1> &input) {
         for (int l = 0; l < output_width; ++l) {
           output(i, j, k, l) = output_col(
               i * output_channels_ * output_height * output_width +
-              j * output_height * output_width + k * output_width + l);
+              j * output_height * output_width + k * output_width + l)+*(this->self_data->b_->data()+j);
         }
       }
     }

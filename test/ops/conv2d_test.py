@@ -4,15 +4,17 @@ import torch.nn as nn
 import numpy as np
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
-TEST_TIMES=1
+TEST_TIMES = 100
 
 COMPILE_FLAG = "-g -O0"
+
 
 def compile():
     out_file = os.path.join(ROOT, "a.out")
     os.system(f"rm {out_file}")
     if not os.path.isfile(out_file):
         os.system(f"g++ {COMPILE_FLAG} {ROOT}/*.cc -I {ROOT}/../../inc -o {ROOT}/a.out")
+
 
 def calculate_cosine_similarity(a1, a2):
     dot_product = np.dot(a1, a2)
@@ -21,27 +23,32 @@ def calculate_cosine_similarity(a1, a2):
     cosine_similarity = dot_product / (norm_a1 * norm_a2)
     return cosine_similarity
 
+
 def diff_array(a1, a2):
-    print(f"mean:{a1.mean()}\t{a2.mean()}")
-    print(f"std:{a1.std()}\t{a2.std()}")
-    print(f"max:{a1.max()}\t{a2.max()}")
-    print(f"min:{a1.min()}\t{a2.min()}")
+    # print(f"mean:{a1.mean()}\t{a2.mean()}")
+    # print(f"std:{a1.std()}\t{a2.std()}")
+    # print(f"max:{a1.max()}\t{a2.max()}")
+    # print(f"min:{a1.min()}\t{a2.min()}")
     print(f"sim: {calculate_cosine_similarity(a1, a2)}")
+
 
 def main():
     compile()
     with torch.no_grad():
         for _ in range(TEST_TIMES):
-            py_conv2d = nn.Conv2d(in_channels=4, out_channels=10, kernel_size=(5, 3), stride=(1, 2), padding=(2, 1), bias=True)
+            py_conv2d = nn.Conv2d(
+                in_channels=4,
+                out_channels=10,
+                kernel_size=(5, 3),
+                stride=(1, 2),
+                padding=(2, 1),
+                bias=True,
+            )
             input = torch.randn((1, 4, 10, 10))
             py_rst = py_conv2d(input)
-            print(f"py_shape:{py_rst.shape}")
-            # print("weight",py_conv2d.weight)
-            print("input_py", input)
-            bias = torch.zeros_like(py_conv2d.bias, dtype=torch.float32)
             with open(f"{ROOT}/tensor.bin", "wb") as tensor_file:
                 weight = memoryview(py_conv2d.weight.reshape(-1).numpy())
-                bias = memoryview(bias.reshape(-1).numpy())
+                bias = memoryview(py_conv2d.bias.reshape(-1).numpy())
                 tensor_file.write(weight)
                 tensor_file.write(bias)
             with open(f"{ROOT}/input.bin", "wb") as input_file:
@@ -57,5 +64,5 @@ def main():
             diff_array(py_rst, cc_rst)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()

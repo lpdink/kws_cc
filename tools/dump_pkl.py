@@ -13,7 +13,7 @@ def main():
     pkl = torch.load(sys.argv[1])
     state_dict = pkl["state_dict"]
     weights_file = open(f"{RES_PATH}/weight.bin", "wb")
-    with open(f"{RES_PATH}/graph.txt", "w") as file: 
+    with open(f"{RES_PATH}/graph.txt", "w") as file:
         for key, value in state_dict.items():
             if not key.endswith("tracked"):
                 # 暂时不转储BN，TODO BN合并到conv中
@@ -24,5 +24,6 @@ def main():
     weights_file.close()
     print(f"bin and graph write out to {RES_PATH}/")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()

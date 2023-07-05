@@ -1,7 +1,16 @@
 import numpy as np
 
+
 class Conv2d:
-    def __init__(self, in_channel=4, out_channel=10, kernel_size=(5, 3), stride=(1,2), padding=(2,1), use_bias=True) -> None:
+    def __init__(
+        self,
+        in_channel=4,
+        out_channel=10,
+        kernel_size=(5, 3),
+        stride=(1, 2),
+        padding=(2, 1),
+        use_bias=True,
+    ) -> None:
         self.in_channel = in_channel
         self.out_channel = out_channel
         self.kernel_size = kernel_size

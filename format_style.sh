@@ -1,3 +1,4 @@
 find ./inc -type f \( -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) -not -path "./third_party/*" -not -path "./inc/Eigen/*" -not -path "./inc/unsupported/*" | xargs clang-format -i --style=Google
 find ./src -type f \( -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) -not -path "./third_party/*" -not -path "./inc/Eigen/*" -not -path "./inc/unsupported/*" | xargs clang-format -i --style=Google
 find ./test -type f \( -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) -not -path "./third_party/*" -not -path "./inc/Eigen/*" -not -path "./inc/unsupported/*" | xargs clang-format -i --style=Google
+black .
