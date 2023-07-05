@@ -6,7 +6,7 @@ import numpy as np
 ROOT = os.path.abspath(os.path.dirname(__file__))
 TEST_TIMES = 100
 
-COMPILE_FLAG = "-g -O0"
+COMPILE_FLAG = "-g -O0 -std=c++11"
 
 
 def compile():
