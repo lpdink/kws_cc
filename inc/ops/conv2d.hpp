@@ -132,7 +132,7 @@ Tensor<T, 4, 1> Conv2D<T>::forward(const Tensor<T, 4, 1> &input) {
   Tensor<T, 2, 1> input_col = im2col(input, std::move(kernel_size_),
                                      std::move(stride_), std::move(padding_));
   // Reshape the weight tensor into a matrix
-  Tensor<T, 2, 1> weight_col = self_data->w_->reshape(Eigen::array<int, 2>(
+  Tensor<T, 2, 1> weight_col = self_data->w_->reshape(Eigen::array<Eigen::DenseIndex, 2>(
       {this->output_channels_,
        input_channels_ * kernel_size_.first * kernel_size_.second}));
   // Perform the matrix multiplication
