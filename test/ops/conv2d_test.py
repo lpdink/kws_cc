@@ -65,4 +65,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    py_rst = np.fromfile("py_rst.bin", np.float32)
+    cc_rst = np.fromfile("cc_rst.bin", np.float32)
+    diff_array(py_rst, cc_rst)

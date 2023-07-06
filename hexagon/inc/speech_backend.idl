@@ -1,0 +1,7 @@
+#include "AEEStdDef.idl"
+#include "remote.idl"
+
+interface speech_backend : remote_handle64 {
+   long plus(in long num1, in long num2, rout long rst);
+   void conv2d();
+};

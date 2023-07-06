@@ -1,8 +1,7 @@
 build/
 third_party/
-resources/
 *.log
 *.out
 .vscode/
-*.bin
+test/ops/*.bin
 .*

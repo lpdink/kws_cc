@@ -77,7 +77,7 @@ template <typename T>
 static Tensor<T, 2, 1> im2col(const Tensor<T, 4, 1> &input,
                               TwoDim &&kernel_size, TwoDim &&stride,
                               TwoDim &&padding) {
-  const int batch_size = input.dimension(0);
+//   const int batch_size = input.dimension(0);
   const int channels = input.dimension(1);
   const int height = input.dimension(2);
   const int width = input.dimension(3);
