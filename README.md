@@ -15,3 +15,13 @@
 cd test/ops/
 python conv2d_test.py
 ```
+
+## test on hexagon:
+
+build.sh脚本包含了向hexagon终端推送编译产物和所需资源文件的逻辑，去掉注释即可。
+
+```
+source ${hexagon_sdk}/setup_sdk_env.source
+cd hexagon
+sh build.sh
+```
