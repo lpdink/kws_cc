@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include<map>
 
 namespace SpeechBackend {
 template <typename T>
@@ -43,10 +44,6 @@ void write_out(const char *file_name, T *ptr, int size) {
   fclose(file);
 }
 
-struct TwoDim {
-  TwoDim(int one, int two) : first(one), second(two) {}
-  int first;
-  int second;
-};
+using TwoDim=std::pair<int, int>;
 }  // namespace SpeechBackend
 #endif

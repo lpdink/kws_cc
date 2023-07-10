@@ -3,5 +3,7 @@ third_party/
 *.log
 *.out
 .vscode/
-test/ops/*.bin
+*.bin
+!hexagon/resources/*.bin
 .*
+resources/
