@@ -32,13 +32,14 @@ static void print_usage()
             "    0: Run on signed PD.\n"
             "    1: Run on unsigned PD.\n"
             "        Default Value: 1\n"
+            "-n runtimes!\n"
             );
 }
 
-int call_skel(int domain_id, bool is_unsignedpd_enabled)
+int call_skel(int domain_id, bool is_unsignedpd_enabled, int run_times)
 {
     int nErr = AEE_SUCCESS;
-
+    unsigned long long runtime_fp32=0, runtime_int8=0;
     int speech_backend_URI_domain_len = strlen(speech_backend_URI) + MAX_DOMAIN_URI_SIZE;
     char *speech_backend_URI_domain = NULL;
     remote_handle64 handle = -1;
@@ -93,12 +94,12 @@ int call_skel(int domain_id, bool is_unsignedpd_enabled)
     // call function here.
     int num1=42;int num2=88;
     int rst = 0;
-    if (AEE_SUCCESS == (nErr = speech_backend_plus(handle, num1, num2, &rst))) {
-           printf("dsp rst:%d\n", rst);
-        }
+    // if (AEE_SUCCESS == (nErr = speech_backend_plus(handle, num1, num2, &rst))) {
+    //        printf("dsp rst:%d\n", rst);
+    //     }
 
-    if (AEE_SUCCESS == (nErr = speech_backend_conv2d(handle))) {
-        printf("\nconv2d finished\n");
+    if (AEE_SUCCESS == (nErr = speech_backend_time_test(handle, run_times, &runtime_fp32, &runtime_int8))) {
+        printf("\nconv2d finished\n fp32 use: %llu\n int8 use:%llu\n", runtime_fp32, runtime_int8);
     }
 
     // free
@@ -122,13 +123,16 @@ int main(int argc, char *argv[])
     int option = 0;
     int domain_id = -1;
     int unsignedpd_flag = 1;
+    int runtimes = 1;
     bool is_unsignedpd_enabled = false;
 
-    while((option = getopt(argc, argv,"d:m:i:U:")) != -1) {
+    while((option = getopt(argc, argv,"d:n:i:U:")) != -1) {
         switch (option) {
             case 'd' : domain_id = atoi(optarg);
                 break;
             case 'U' : unsignedpd_flag = atoi(optarg);
+                break;
+            case 'n' : runtimes = atoi(optarg);
                 break;
             default:
                 print_usage();
@@ -168,7 +172,7 @@ int main(int argc, char *argv[])
 
 
     printf("Attempting to run on %s PD on domain %d\n", is_unsignedpd_enabled==true?"unsigned":"signed", domain_id);
-    nErr = call_skel(domain_id, is_unsignedpd_enabled);
+    nErr = call_skel(domain_id, is_unsignedpd_enabled, runtimes);
     if (nErr) {
         printf("ERROR 0x%x: test failed\n\n", nErr);
     }

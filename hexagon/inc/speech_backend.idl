@@ -4,4 +4,5 @@
 interface speech_backend : remote_handle64 {
    long plus(in long num1, in long num2, rout long rst);
    void conv2d();
+   void time_test(in long run_times, rout unsigned long long run_time_fp32, rout unsigned long long run_time_int8);
 };
